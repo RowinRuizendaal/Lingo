@@ -17,6 +17,7 @@ function setup() {
         for (let j = 0; j < woordLength; j++) {
         }
             //Wat wil je doen met deze variable J & I ?
+            //Een array maken zoals de bingo sheet maar dan met een variable lengte
     }
     console.log(board);
 }
