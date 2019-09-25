@@ -4,19 +4,19 @@ let availableNumb = [];
 
 var board = [''];
 var bingoSheet = [
-    ['','','','','',],
-    ['','','','','',],
-    ['','','','','',],
-    ['','','','','',],
-    ['','','','','',]
+    ['', '', '', '', '', ],
+    ['', '', '', '', '', ],
+    ['', '', '', '', '', ],
+    ['', '', '', '', '', ],
+    ['', '', '', '', '', ]
 ];
 
 function setup() {
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
-        // board = [i[j]];
-        console.log(j);
-        // board[i].push('a', 'b');
+            // board = [i[j]];
+            console.log(j);
+            // board[i].push('a', 'b');
         }
         board.push('a', 'b');
     }
@@ -39,6 +39,3 @@ function setup() {
 }
 
 setup();
-
-
-
