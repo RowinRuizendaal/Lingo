@@ -90,7 +90,7 @@ function bingoCheck(sheet) {
 
 
 
-var woord = 'Bannaan';
+var woord = 'Eiwit';
 var letters = [];
 
 function wordToLetter(s) {
