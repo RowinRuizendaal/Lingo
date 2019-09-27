@@ -111,5 +111,5 @@ wordToLetter(woord);
 
 
 function compareWord() {
-    
+     
 }

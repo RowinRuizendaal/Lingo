@@ -13,7 +13,8 @@
 
 
 body {
-    background-color: var(--BgBlauw);
+    /* background-color: var(--BgBlauw); */
+    background-color: lightblue;
 }
 
 h1 {
@@ -45,6 +46,6 @@ h1 {
     align-items: center;
 
     color: white;
-    background-color: green;
+    background: radial-gradient(blue, black);
 }
 
