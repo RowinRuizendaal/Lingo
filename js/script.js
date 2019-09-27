@@ -12,7 +12,7 @@ var bingoSheet = [
 ];
 
 function setup() {
-    
+
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             // board = [i[j]];
@@ -45,7 +45,7 @@ setup();
 
 function fillBingoSheet() {
     for (let i = 0; i < bingoSheet.length; i++) {
-        for (let j = 0;  j < bingoSheet.length; j++) {
+        for (let j = 0; j < bingoSheet.length; j++) {
             let x = i * 5 + j;
             document.querySelectorAll('#bingoSheet .row')[x].textContent = bingoSheet[i][j];
         }
@@ -87,10 +87,10 @@ function bingoCheck(sheet) {
     }
 }
 
+var hetWoord = 'eiwip';
+var guess = 'eiwit';
 
-
-
-var woord = 'Eiwit';
+// guess = guess.toLowerCase;
 var letters = [];
 
 function wordToLetter(s) {
@@ -98,18 +98,46 @@ function wordToLetter(s) {
     for (let i = 0; i < s.length; i++) {
         letters.push(s.charAt(i));
     }
-    console.log(letters);
-
-    if (woord.length != woordLength) {
+    if (guess.length != woordLength) {
         console.log('helaas dat is geen ' + woordLength + ' woord')
     }
+    return letters;
 }
 
-wordToLetter(woord);
+
+// hetWoord = hetWoord.toLowerCase;
 
 
+function compareWord(guess, woord) {
+    let goodLetter = [];
+    // good dif bad
 
+    let tempArray = wordToLetter(guess);
+    console.log(tempArray);
 
-function compareWord() {
-     
+    for (let i = 0; i <= woordLength; i++) {
+        if (guess.charAt(i) == woord.charAt(i)) {
+            goodLetter[i] = 'good';
+            tempArray.splice(i, 1);
+            console.log(tempArray);
+            // break;
+        } else {
+            for (let j = 0; j < 5; j++) {
+                if (tempArray[j] == woord.charAt(i)) {
+                    goodLetter[i] = 'def';
+                    tempArray.splice(i, 1);
+                    console.log(tempArray);
+                    console.log('def');
+                } else {
+                    goodLetter[i] = 'bad';
+                    console.log('bad');
+                }
+            }
+        }
+    }
+    console.log(goodLetter);
+
+    // check if correct spot, dan check in woord, haal weg uit array als zo
 }
+
+compareWord('aaeatt', 'eiwitt');
