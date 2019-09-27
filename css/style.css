@@ -5,7 +5,6 @@
 
 }
 
-
 * {
     margin: 0;
     padding: 0;
@@ -20,5 +19,32 @@ body {
 h1 {
     color: white;
     text-align: center;
-
 }
+
+#bingoSheet {
+    display: flex;
+    flex-direction: column;
+}
+
+#bingoSheet .col {
+    display: flex;
+    flex-direction: row;
+}
+
+#bingoSheet .row {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+
+    margin: 5px;
+
+    font-size: 3rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    background-color: green;
+}
+
