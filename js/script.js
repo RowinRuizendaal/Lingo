@@ -11,6 +11,10 @@ var bingoSheet = [
     ['', '', '', '', '', ]
 ];
 
+const sound = new Audio();
+const button = document.getElementsByClassName('bier')[0];
+button.addEventListener('click', PlaySound);
+
 function setup() {
 
     for (let i = 0; i < 5; i++) {
@@ -138,6 +142,13 @@ function compareWord(guess, woord) {
     console.log(goodLetter);
 
     // check if correct spot, dan check in woord, haal weg uit array als zo
+}
+
+
+
+function PlaySound() {
+    sound.src = 'Sound/bier.mp3';
+    sound.play();
 }
 
 compareWord('aaeatt', 'eiwitt');
