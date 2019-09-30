@@ -1,4 +1,4 @@
-var woordLength = 5;
+var woordLength = 6;
 
 let availableNumb = [];
 
@@ -114,37 +114,46 @@ function wordToLetter(s) {
 
 function compareWord(guess, woord) {
     let goodLetter = [];
-    // good dif bad
+    let difLetter = [];
+
+    // good different/dif bad
 
     let tempArray = wordToLetter(guess);
+    let tempArray2 = wordToLetter(woord);
+
     console.log(tempArray);
 
-    for (let i = 0; i <= woordLength; i++) {
+    //check same spot
+    for (let i = 0; i < woordLength; i++) {
         if (guess.charAt(i) == woord.charAt(i)) {
             goodLetter[i] = 'good';
-            tempArray.splice(i, 1);
-            console.log(tempArray);
-            // break;
-        } else {
-            for (let j = 0; j < 5; j++) {
-                if (tempArray[j] == woord.charAt(i)) {
-                    goodLetter[i] = 'def';
-                    tempArray.splice(i, 1);
-                    console.log(tempArray);
-                    console.log('def');
-                } else {
-                    goodLetter[i] = 'bad';
-                    console.log('bad');
-                }
-            }
-        }
+        } 
     }
     console.log(goodLetter);
 
-    // check if correct spot, dan check in woord, haal weg uit array als zo
+    for (let i = 0; i < woordLength; i++) {
+        for(let j = 0; j < woordLength; j++) {
+            if (tempArray[i] == tempArray2[j]) {
+                difLetter[i] = 'dif';
+                //haal letter uit array om dubbele te voorkomen
+                tempArray2.splice(j, 1)
+            }            
+        }
+    }
+    console.log(difLetter);
+
+    //combineer good en different
+    for (let i = 0; i < woordLength; i++) {
+        if (goodLetter[i] == 'good') {
+            difLetter[i] = goodLetter[i];
+        }
+    }
+    console.log(difLetter);
+
+    //check if correct spot, dan check in woord, haal weg uit array als zo
 }
 
-compareWord('aaaate', 'eiwitt');
+compareWord('eeiatt', 'eiwitt');
 
 function PlaySound() {
     sound.src = 'Sound/Bier.mp3';
