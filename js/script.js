@@ -147,7 +147,7 @@ function compareWord(guess, woord) {
 
 
 function PlaySound() {
-    sound.src = 'Sound/bier.mp3';
+    sound.src = 'Sound/Bier.mp3';
     sound.play();
 }
 
