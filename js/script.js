@@ -144,11 +144,11 @@ function compareWord(guess, woord) {
     // check if correct spot, dan check in woord, haal weg uit array als zo
 }
 
-
+compareWord('aaaate', 'eiwitt');
 
 function PlaySound() {
     sound.src = 'Sound/Bier.mp3';
     sound.play();
 }
 
-compareWord('aaeatt', 'eiwitt');
+
