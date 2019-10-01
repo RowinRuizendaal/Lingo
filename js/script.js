@@ -162,7 +162,6 @@ function textveldCheck() {
     document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
     console.log(input); //check check dubble check
     document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken
-    PlaySound(); //testing purpose
 }
 
 
