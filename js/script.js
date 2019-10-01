@@ -157,8 +157,12 @@ function compareWord(guess, woord) {
 compareWord('eiwitt', 'eiwitt');
 
 
-function MakeBallOrange() {
-    //Geen zin meer
+function textveldCheck() {
+    let input = document.getElementsByClassName('gok')[0].value; //input van form
+    document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
+    console.log(input); //check check dubble check
+    document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken
+    PlaySound(); //testing purpose
 }
 
 
@@ -167,4 +171,6 @@ function PlaySound() {
     sound.play();
 }
 
+
+document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
 
