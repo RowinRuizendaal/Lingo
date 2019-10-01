@@ -154,14 +154,14 @@ function compareWord(guess, woord) {
 
 
 
-compareWord('eiwitt', 'eiwitt');
+//compareWord('eiwitt', 'eiwitt'); aanroepen in functie textveldcheck laten staan voor debug
 
 
 function textveldCheck() {
     let input = document.getElementsByClassName('gok')[0].value; //input van form
     document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
-    console.log(input); //check check dubble check
-    document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken
+    compareWord(input, 'eiwitt'); //Vergelijk de woorden van input met het gekozen woord
+    document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken voor volgende ronde
 }
 
 
