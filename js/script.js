@@ -19,9 +19,6 @@ function setup() {
 
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
-            // board = [i[j]];
-            // console.log(j);
-            // board[i].push('a', 'b');
         }
         board.push('a', 'b');
     }
@@ -91,8 +88,10 @@ function bingoCheck(sheet) {
     }
 }
 
+let input = document.getElementsByClassName('gok')[0].value; //input van form
 var hetWoord = 'eiwip';
-var guess = 'eiwit';
+var guess = input; //Var guess is gelijk een input
+console.log(input);
 
 // guess = guess.toLowerCase;
 var letters = [];
@@ -153,11 +152,25 @@ function compareWord(guess, woord) {
     //check if correct spot, dan check in woord, haal weg uit array als zo
 }
 
-compareWord('eeiatt', 'eiwitt');
+
+
+compareWord('eiwitt', 'eiwitt');
+
+
+function textveldCheck() {
+    let input = document.getElementsByClassName('gok')[0].value; //input van form
+    document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
+    console.log(input); //check check dubble check
+    document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken
+    PlaySound(); //testing purpose
+}
+
 
 function PlaySound() {
     sound.src = 'Sound/Bier.mp3';
     sound.play();
 }
 
+
+document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
 
