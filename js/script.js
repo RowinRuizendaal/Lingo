@@ -91,8 +91,10 @@ function bingoCheck(sheet) {
     }
 }
 
+let input = document.getElementsByClassName('gok')[0].value; //input van form
 var hetWoord = 'eiwip';
-var guess = 'eiwit';
+var guess = input; //Var guess is gelijk een input
+console.log(input);
 
 // guess = guess.toLowerCase;
 var letters = [];
@@ -153,7 +155,13 @@ function compareWord(guess, woord) {
     //check if correct spot, dan check in woord, haal weg uit array als zo
 }
 
-compareWord('eeiatt', 'eiwitt');
+
+
+compareWord('eiwitt', 'eiwitt');
+
+
+
+
 
 function PlaySound() {
     sound.src = 'Sound/Bier.mp3';
