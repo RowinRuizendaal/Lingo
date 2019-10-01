@@ -19,9 +19,6 @@ function setup() {
 
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
-            // board = [i[j]];
-            // console.log(j);
-            // board[i].push('a', 'b');
         }
         board.push('a', 'b');
     }
@@ -160,7 +157,9 @@ function compareWord(guess, woord) {
 compareWord('eiwitt', 'eiwitt');
 
 
-
+function MakeBallOrange() {
+    //Geen zin meer
+}
 
 
 function PlaySound() {
