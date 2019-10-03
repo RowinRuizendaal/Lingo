@@ -18,8 +18,7 @@ button.addEventListener('click', PlaySound);
 function setup() {
 
     for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 5; j++) {
-        }
+        for (let j = 0; j < 5; j++) {}
         board.push('a', 'b');
     }
     console.log(board);
@@ -126,17 +125,17 @@ function compareWord(guess, woord) {
     for (let i = 0; i < woordLength; i++) {
         if (guess.charAt(i) == woord.charAt(i)) {
             goodLetter[i] = 'good';
-        } 
+        }
     }
     console.log(goodLetter);
 
     for (let i = 0; i < woordLength; i++) {
-        for(let j = 0; j < woordLength; j++) {
+        for (let j = 0; j < woordLength; j++) {
             if (tempArray[i] == tempArray2[j]) {
                 difLetter[i] = 'dif';
                 //haal letter uit array om dubbele te voorkomen
                 tempArray2.splice(j, 1)
-            }            
+            }
         }
     }
     console.log(difLetter);
@@ -172,4 +171,3 @@ function PlaySound() {
 
 
 document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
-
