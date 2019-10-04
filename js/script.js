@@ -11,6 +11,8 @@ var bingoSheet = [
     ['', '', '', '', '', ]
 ];
 
+var jsonUrl = 'http://127.0.0.1:5500/woorden/';
+
 const sound = new Audio();
 const button = document.getElementsByClassName('bier')[0];
 button.addEventListener('click', PlaySound);
@@ -38,10 +40,7 @@ function setup() {
     }
     console.log(bingoSheet);
 }
-
 setup();
-
-
 
 function fillBingoSheet() {
     for (let i = 0; i < bingoSheet.length; i++) {
@@ -51,10 +50,7 @@ function fillBingoSheet() {
         }
     }
 }
-
 fillBingoSheet();
-
-
 
 
 
@@ -87,8 +83,12 @@ function bingoCheck(sheet) {
     }
 }
 
+
+
+
+
 let input = document.getElementsByClassName('gok')[0].value; //input van form
-var hetWoord = 'eiwip';
+var hetWoord = 'eiwipt';
 var guess = input; //Var guess is gelijk een input
 console.log(input);
 
@@ -111,10 +111,9 @@ function wordToLetter(s) {
 
 
 function compareWord(guess, woord) {
+    // good different/dif bad
     let goodLetter = [];
     let difLetter = [];
-
-    // good different/dif bad
 
     let tempArray = wordToLetter(guess);
     let tempArray2 = wordToLetter(woord);
@@ -127,7 +126,6 @@ function compareWord(guess, woord) {
             goodLetter[i] = 'good';
         }
     }
-    console.log(goodLetter);
 
     for (let i = 0; i < woordLength; i++) {
         for (let j = 0; j < woordLength; j++) {
@@ -138,7 +136,6 @@ function compareWord(guess, woord) {
             }
         }
     }
-    console.log(difLetter);
 
     //combineer good en different
     for (let i = 0; i < woordLength; i++) {
@@ -147,7 +144,6 @@ function compareWord(guess, woord) {
         }
     }
     console.log(difLetter);
-
     //check if correct spot, dan check in woord, haal weg uit array als zo
 }
 
@@ -158,6 +154,7 @@ function compareWord(guess, woord) {
 
 function textveldCheck() {
     let input = document.getElementsByClassName('gok')[0].value; //input van form
+    console.log( document.getElementsByClassName('gok')[0].value);
     document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
     compareWord(input, 'eiwitt'); //Vergelijk de woorden van input met het gekozen woord
     document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken voor volgende ronde
@@ -171,3 +168,24 @@ function PlaySound() {
 
 
 document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
+
+
+
+async function checkWoord(guess) {
+    let bestaat = false;
+    var firstLetter = 'r';
+    var jsonUrl2 = jsonUrl + firstLetter + '.json';
+    const responce = await fetch(jsonUrl2);
+    var data = await responce.json();
+    console.log(data.length);
+
+    for (i = 0; i < data.length; i++) {
+        if (data[i].toLowerCase() == guess.toLowerCase()) {
+            bestaat = true;
+        }
+    }
+    console.log(bestaat);
+    return bestaat;
+}
+
+console.log(checkWoord('rappen'));
