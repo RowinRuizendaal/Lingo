@@ -86,22 +86,25 @@ function bingoCheck(sheet) {
 
 
 
-
+function wordToLetter(s) {
 let input = document.getElementsByClassName('gok')[0].value; //input van form
 var hetWoord = 'eiwipt';
-var guess = input; //Var guess is gelijk een input
-console.log(input);
+var guess = input; //Var guess is gelijk een input //als je naar 'rapper' veranderd werkt het
+console.log(input); //check check
 
 // guess = guess.toLowerCase;
 var letters = [];
 
-function wordToLetter(s) {
+
     letters = [];
     for (let i = 0; i < s.length; i++) {
         letters.push(s.charAt(i));
     }
-    if (guess.length != woordLength) {
-        console.log('helaas dat is geen ' + woordLength + ' woord')
+    if (guess.length == woordLength) {
+        console.log('dat is een ' + woordLength + ' letter woord');
+    }else {
+        console.log('Dat is geen ' + woordLength + ' letter woord');
+        console.log(woordLength);
     }
     return letters;
 }
