@@ -189,3 +189,6 @@ async function checkWoord(guess) {
 }
 
 console.log(checkWoord('rappen'));
+document.getElementsByClassName("testing")[0].addEventListener("click", function(event){
+    event.preventDefault()
+  });
