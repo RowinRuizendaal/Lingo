@@ -11,6 +11,7 @@ var bingoSheet = [
     ['', '', '', '', '', ]
 ];
 
+
 var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
 
 const sound = new Audio();
