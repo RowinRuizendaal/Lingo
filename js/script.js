@@ -11,7 +11,7 @@ var bingoSheet = [
     ['', '', '', '', '', ]
 ];
 
-var jsonUrl = 'http://127.0.0.1:5500/woorden/';
+var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
 
 const sound = new Audio();
 const button = document.getElementsByClassName('bier')[0];
