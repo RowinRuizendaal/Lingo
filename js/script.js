@@ -105,7 +105,7 @@ function wordToLetter(s) {
         letters.push(s.charAt(i));
     }
     if (guess.length == woordLength) {
-        console.log('dat is een ' + woordLength + ' letter woord');
+        console.log('Dat is een ' + woordLength + ' letter woord');
     } else {
         console.log('Dat is geen ' + woordLength + ' letter woord makker');
     }
