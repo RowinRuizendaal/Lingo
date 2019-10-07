@@ -1,6 +1,8 @@
 var woordLength = 6;
-
 let availableNumb = [];
+
+var guess = '';
+var hetWoord = '';
 
 var board = [''];
 var bingoSheet = [
@@ -11,15 +13,13 @@ var bingoSheet = [
     ['', '', '', '', '', ]
 ];
 
-
+/*link naar woordenlijsten*/
 var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
+// var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
 
 const sound = new Audio();
-const button = document.getElementsByClassName('bier')[0];
-button.addEventListener('click', PlaySound);
 
 function setup() {
-
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {}
         board.push('a', 'b');
@@ -40,19 +40,28 @@ function setup() {
         }
     }
     console.log(bingoSheet);
-}
-setup();
 
-function fillBingoSheet() {
+    // vul bingo sheet
     for (let i = 0; i < bingoSheet.length; i++) {
         for (let j = 0; j < bingoSheet.length; j++) {
             let x = i * 5 + j;
             document.querySelectorAll('#bingoSheet .row')[x].textContent = bingoSheet[i][j];
         }
     }
-}
-fillBingoSheet();
 
+    /*geluid knop*/
+    document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
+
+    /*prevent refresh als submit*/
+    document.getElementsByClassName("testing")[0].addEventListener("click", function (event) {
+        event.preventDefault()
+    });
+
+    document.getElementsByClassName("bier")[0].addEventListener("click", function (event) {
+        event.preventDefault()
+    });
+}
+setup();
 
 
 /*check bingo board winner*/
@@ -60,7 +69,7 @@ function equals5(a, b, c, d, e) {
     return (a == b && b == c && c == d && d == e && a != '');
 }
 
-function bingoCheck(sheet) {
+function checkWinner(sheet) {
     //horizontal en vertical
     for (let i = 0; sheet.length; i++) {
         if (equals5(sheet[i][0], sheet[i][1], sheet[i][2], sheet[i][3], sheet[i][4], )) {
@@ -85,33 +94,23 @@ function bingoCheck(sheet) {
 }
 
 
-
-
 function wordToLetter(s) {
-let input = document.getElementsByClassName('gok')[0].value; //input van form
-var hetWoord = 'eiwipt';
-var guess = input; //Var guess is gelijk een input //als je naar 'rapper' veranderd werkt het
-console.log(input); //check check
+    let input = document.getElementsByClassName('gok')[0].value; //input form
+    guess = input; //Var guess is gelijk een input
+    console.log(input); //check
 
-// guess = guess.toLowerCase;
-var letters = [];
-
-
-    letters = [];
+    // guess = guess.toLowerCase;
+    var letters = [];
     for (let i = 0; i < s.length; i++) {
         letters.push(s.charAt(i));
     }
     if (guess.length == woordLength) {
         console.log('dat is een ' + woordLength + ' letter woord');
-    }else {
-        console.log('Dat is geen ' + woordLength + ' letter woord');
-        console.log(woordLength);
+    } else {
+        console.log('Dat is geen ' + woordLength + ' letter woord makker');
     }
     return letters;
 }
-
-
-// hetWoord = hetWoord.toLowerCase;
 
 
 function compareWord(guess, woord) {
@@ -119,10 +118,8 @@ function compareWord(guess, woord) {
     let goodLetter = [];
     let difLetter = [];
 
-    let tempArray = wordToLetter(guess);
-    let tempArray2 = wordToLetter(woord);
-
-    console.log(tempArray);
+    let guessArray = wordToLetter(guess);
+    let hetWoordArray = wordToLetter(woord);
 
     //check same spot
     for (let i = 0; i < woordLength; i++) {
@@ -131,12 +128,13 @@ function compareWord(guess, woord) {
         }
     }
 
+    // check different spot
     for (let i = 0; i < woordLength; i++) {
         for (let j = 0; j < woordLength; j++) {
-            if (tempArray[i] == tempArray2[j]) {
+            if (guessArray[i] == hetWoordArray[j]) {
                 difLetter[i] = 'dif';
                 //haal letter uit array om dubbele te voorkomen
-                tempArray2.splice(j, 1)
+                hetWoordArray.splice(j, 1)
             }
         }
     }
@@ -148,20 +146,18 @@ function compareWord(guess, woord) {
         }
     }
     console.log(difLetter);
-    //check if correct spot, dan check in woord, haal weg uit array als zo
 }
-
-
-
-//compareWord('eiwitt', 'eiwitt'); aanroepen in functie textveldcheck laten staan voor debug
 
 
 function textveldCheck() {
     let input = document.getElementsByClassName('gok')[0].value; //input van form
-    console.log( document.getElementsByClassName('gok')[0].value);
+    console.log(document.getElementsByClassName('gok')[0].value);
     document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
-    compareWord(input, 'eiwitt'); //Vergelijk de woorden van input met het gekozen woord
+    // compareWord(input, 'eiwitt'); //Vergelijk de woorden van input met het gekozen woord
     document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken voor volgende ronde
+
+    /*kijk of bestaat*/
+    checkWoord(input);
 }
 
 
@@ -170,34 +166,21 @@ function PlaySound() {
     sound.play();
 }
 
-
 document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
 
 
-
+/*check of woord bestaat*/
 async function checkWoord(guess) {
     let bestaat = false;
-    var firstLetter = 'r';
-    var jsonUrl2 = jsonUrl + firstLetter + '.json';
+    let jsonUrl2 = jsonUrl + guess.charAt(0).toLowerCase() + '.json';
     const responce = await fetch(jsonUrl2);
-    var data = await responce.json();
-    console.log(data.length);
+    let data = await responce.json();
 
     for (i = 0; i < data.length; i++) {
         if (data[i].toLowerCase() == guess.toLowerCase()) {
             bestaat = true;
+            console.log('dit woord bestaat');
         }
     }
-    console.log(bestaat);
     return bestaat;
 }
-
-console.log(checkWoord('rappen'));
-
-document.getElementsByClassName("testing")[0].addEventListener("click", function(event){
-    event.preventDefault()
-  });
-
-  document.getElementsByClassName("bier")[0].addEventListener("click", function(event){
-    event.preventDefault()
-  });
