@@ -2,6 +2,9 @@
     --Geel: #FFDD3E;
     --BgBlauw: #0544A5;
     --Oranje: #FF752A;
+
+    --lingoOranje: #FF752A;
+    --lingoBlauw: #0544A5;
 }
 
 * {
@@ -67,29 +70,37 @@ main div {
 
 #letterSheet {
     grid-area: letterSheet;
-    /* background-color: #FF752A; */
-    /* width: 100%; */
     height: 200px;
     /* height: 100%; */
-    width: 200px;
+    width: auto;
 
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     grid-gap: 10px;
 }
 
 #letterSheet div {
-    width: 100%;
-    height: 100%;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    box-shadow: inset 0px 1px 3px 3px #000000;
+    justify-content: center;
+    text-align: center;
+    font-size: 3rem;
+    text-transform: uppercase;
+    align-items: center;
+    color: white;
+
+    text-shadow: 2px 2px 2px #000000;
 }
 
 #letterSheet div:nth-child(odd) {
-    background-color: greenyellow;
+    background-color: var(--lingoBlauw);
 }
 
 #letterSheet div:nth-child(even) {
-    background-color: #FF752A;
+    background-color: var(--lingoOranje);
 }
 
 #guess {

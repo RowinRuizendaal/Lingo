@@ -13,9 +13,11 @@ var bingoSheet = [
     ['', '', '', '', '', ]
 ];
 
+var abc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', "w", 'x', 'y', 'z'];
+
 /*link naar woordenlijsten*/
-var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
-// var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
+// var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
+var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
 
 const sound = new Audio();
 
@@ -62,6 +64,22 @@ function setup() {
     });
 }
 setup();
+
+
+
+async function randomWoord() {
+    let ranNumb = Math.floor(Math.random() * abc.length);
+    let url = jsonUrl + abc[ranNumb] + '.json';
+    console.log(url);
+    let data = await fetch(url);
+    data = await data.json();
+    ranNumb = Math.floor(Math.random() * data.length);
+
+    console.log(data[ranNumb]);
+    return data[ranNumb];
+}
+
+console.log(randomWoord());
 
 
 /*check bingo board winner*/
@@ -180,7 +198,21 @@ async function checkWoord(guess) {
         if (data[i].toLowerCase() == guess.toLowerCase()) {
             bestaat = true;
             console.log('dit woord bestaat');
+            break;
         }
     }
     return bestaat;
 }
+
+
+
+async function letterLenght() {
+    for (let i = 0; i < abc.length; i++) {
+        let url = jsonUrl + abc[i] + '.json';
+        let resp = await fetch(url);
+        resp = await resp.json();
+        console.log(resp.length);
+    }
+}
+
+// letterLenght();
