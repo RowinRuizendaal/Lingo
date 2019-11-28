@@ -16,8 +16,8 @@ var bingoSheet = [
 var abc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', "w", 'x', 'y', 'z'];
 
 /*link naar woordenlijsten*/
-var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
-// var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
+// var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
+var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
 
 const sound = new Audio();
 
