@@ -47,7 +47,7 @@ function setup() {
     for (let i = 0; i < bingoSheet.length; i++) {
         for (let j = 0; j < bingoSheet.length; j++) {
             let x = i * 5 + j;
-            document.querySelectorAll('#bingoSheet .row')[x].textContent = bingoSheet[i][j];
+            document.querySelectorAll('#bingoSheet div')[x].textContent = bingoSheet[i][j];
         }
     }
 

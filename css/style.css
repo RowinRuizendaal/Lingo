@@ -23,16 +23,8 @@ h1 {
     text-align: center;
 }
 
-
-main {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-gap: 10px;
-    grid-template-areas:
-        "bingoSheet"
-        "letterSheet"
-        "submit"
+main div:first-child {
+    display: flex;
 }
 
 main div {
@@ -41,26 +33,25 @@ main div {
 }
 
 #bingoSheet {
-    /* width: 100%; */
-    /* max-width: 100vw; */
-    /* height: 100%; */
     width: 100vw; 
+    max-width: 400px;
     height: 100vw;
+    max-height: 400px;
 
-    display: flex;
-    flex-direction: column;
-    grid-area: bingoSheet;
+    /* grid-area: bingoSheet; */
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-gap: .4rem;
+
+    margin: 0 auto 2rem;
 }
 
-#bingoSheet .col {
-    display: flex;
-    flex-direction: row;
-    height: 20%;
-}
+#bingoSheet div {
+    width: 100%;
+    height: 100%;
 
-#bingoSheet .row {
-    width: 20%;
-    height: auto;
     box-sizing: border-box;
     border-radius: 50%;
     margin: 5px;
@@ -74,21 +65,26 @@ main div {
 
 
 #letterSheet {
-    grid-area: letterSheet;
-    height: 200px;
+    /* grid-area: letterSheet; */
+    height: auto;
     /* height: 100%; */
-    width: auto;
-    max-width: 100vw;
+    width: 100vw;
+    max-width: 400px;
 
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr);
-    grid-gap: 10px;
+    grid-gap: .4rem;
+
+    margin: 0 auto 2rem;
 }
 
 #letterSheet div {
-    width: 75px;
+    /* width: 75px; */
+    width: 100%;
+    max-width: 55px;
     height: 100%;
+    
     display: flex;
     box-shadow: inset 0px 1px 3px 3px #000000;
     justify-content: center;
@@ -110,14 +106,16 @@ main div {
 }
 
 #guess {
-    grid-area: submit;
+    /* grid-area: submit; */
     width: 100%;
     background-color: lightgray;
+    width: 100%;
 }
 
 form {
-    width: 50%;
-    min-width: 500px;
+    /* width: 50%;
+    min-width: 500px; */
+    max-width: 1024px;
     margin: 0 auto;
 }
 
@@ -132,12 +130,12 @@ input[type=text] {
 
 /* Tablet */
 @media screen and (min-width: 768px) {
-    main {
+    /* main {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
 
         grid-template-areas:
             "bingoSheet letterSheet"
             "submit submit"
-    }
+    } */
 }
