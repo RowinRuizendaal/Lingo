@@ -4,6 +4,8 @@ let availableNumb = [];
 var guess = '';
 var hetWoord = '';
 
+var turn = 0;
+
 var board = [''];
 var bingoSheet = [
     ['', '', '', '', '', ],
@@ -52,20 +54,18 @@ function setup() {
     }
 
     /*geluid knop*/
-    document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
+    // document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
 
     /*prevent refresh als submit*/
     document.getElementsByClassName("testing")[0].addEventListener("click", function (event) {
         event.preventDefault()
     });
 
-    document.getElementsByClassName("bier")[0].addEventListener("click", function (event) {
-        event.preventDefault()
-    });
+    // document.getElementsByClassName("bier")[0].addEventListener("click", function (event) {
+    //     event.preventDefault()
+    // });
 }
 setup();
-
-
 
 async function randomWoord() {
     let ranNumb = Math.floor(Math.random() * abc.length);
@@ -75,11 +75,13 @@ async function randomWoord() {
     data = await data.json();
     ranNumb = Math.floor(Math.random() * data.length);
 
-    console.log(data[ranNumb]);
-    return data[ranNumb];
+    hetWoord = data[ranNumb];
+    console.log(hetWoord);
+    return hetWoord;
 }
 
-console.log(randomWoord());
+hetWoord = randomWoord();
+console.log(hetWoord);
 
 
 /*check bingo board winner*/
@@ -114,19 +116,18 @@ function checkWinner(sheet) {
 
 function wordToLetter(s) {
     let input = document.getElementsByClassName('gok')[0].value; //input form
-    guess = input; //Var guess is gelijk een input
-    console.log(input); //check
+    // guess = input; //Var guess is gelijk een input
 
     // guess = guess.toLowerCase;
     var letters = [];
     for (let i = 0; i < s.length; i++) {
         letters.push(s.charAt(i));
     }
-    if (guess.length == woordLength) {
-        console.log('Dat is een ' + woordLength + ' letter woord');
-    } else {
-        console.log('Dat is geen ' + woordLength + ' letter woord makker');
-    }
+    // if (guess.length == woordLength) {
+    //     console.log('Dat is een ' + woordLength + ' letter woord');
+    // } else {
+    //     console.log('Dat is geen ' + woordLength + ' letter woord makker');
+    // }
     return letters;
 }
 
@@ -136,8 +137,21 @@ function compareWord(guess, woord) {
     let goodLetter = [];
     let difLetter = [];
 
+    console.log(guess);
+    console.log(woord);
+
     let guessArray = wordToLetter(guess);
     let hetWoordArray = wordToLetter(woord);
+
+    console.log(guessArray);
+
+    //check woord lengte 
+    if (guessArray < woordLength) {
+        console.log('woord lengte klopt niet');
+        return
+    }
+
+
 
     //check same spot
     for (let i = 0; i < woordLength; i++) {
@@ -170,19 +184,22 @@ function compareWord(guess, woord) {
 function textveldCheck() {
     let input = document.getElementsByClassName('gok')[0].value; //input van form
     console.log(document.getElementsByClassName('gok')[0].value);
+
     document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
-    // compareWord(input, 'eiwitt'); //Vergelijk de woorden van input met het gekozen woord
     document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken voor volgende ronde
 
     /*kijk of bestaat*/
-    checkWoord(input);
+    if (checkWoord(input)) {
+        compareWord(input, hetWoord);
+    }
+
+    lettersToBoard(input);
 }
 
-
-function PlaySound() {
-    sound.src = 'Sound/Bier.mp3';
-    sound.play();
-}
+// function PlaySound() {
+//     sound.src = 'Sound/Bier.mp3';
+//     sound.play();
+// }
 
 document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
 
@@ -205,7 +222,7 @@ async function checkWoord(guess) {
 }
 
 
-
+/*
 async function letterLenght() {
     for (let i = 0; i < abc.length; i++) {
         let url = jsonUrl + abc[i] + '.json';
@@ -214,5 +231,29 @@ async function letterLenght() {
         console.log(resp.length);
     }
 }
-
+*/
 // letterLenght();
+
+function testLengteWoord(guess) {
+    if (!guess.charAt(woordLength + 1 == '')) {
+        console.log('niet te lang');
+    }
+
+    if (guess.charAt(woordLength - 1 == '')) {
+        console.log('te kort');
+    }
+
+}
+
+function lettersToBoard(guess) {
+    let woordString = wordToLetter(guess);
+
+    for (let i = 0; i < woordLength; i++) {
+        document.querySelectorAll('#letterSheet div')[woordLength * turn + i].textContent = woordString[i];
+    }
+
+    turn++;
+    if (turn > 5) {
+        console.log('game over bitch boi');
+    }
+}
