@@ -97,11 +97,16 @@ main div {
     text-shadow: 2px 2px 2px #000000;
 }
 
-#letterSheet div:nth-child(odd) {
+#letterSheet div {
     background-color: var(--lingoBlauw);
 }
 
-#letterSheet div:nth-child(even) {
+#letterSheet .diffrent {
+    /* background-color: var(--lingoOranje); */
+    background-color: yellow;
+}
+
+#letterSheet .good {
     background-color: var(--lingoOranje);
 }
 
