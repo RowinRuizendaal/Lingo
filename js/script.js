@@ -3,6 +3,7 @@ let availableNumb = [];
 
 var guess = '';
 var hetWoord = '';
+var goedeLetters = [];
 
 var turn = 0;
 
@@ -24,12 +25,6 @@ var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
 const sound = new Audio();
 
 function setup() {
-    for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 5; j++) {}
-        board.push('a', 'b');
-    }
-    console.log(board);
-
     for (let i = 0; i < 99; i++) {
         availableNumb[i] = i + 1;
     }
@@ -70,19 +65,19 @@ setup();
 async function randomWoord() {
     let ranNumb = Math.floor(Math.random() * abc.length);
     let url = jsonUrl + abc[ranNumb] + '.json';
-    console.log(url);
     let data = await fetch(url);
     data = await data.json();
     ranNumb = Math.floor(Math.random() * data.length);
 
     hetWoord = data[ranNumb].toLowerCase();
+
+    document.querySelectorAll('#letterSheet div')[0].textContent = hetWoord.charAt(0);
     console.log(hetWoord);
     return hetWoord;
 }
 
 hetWoord = randomWoord();
 console.log(hetWoord);
-
 
 /*check bingo board winner*/
 function equals5(a, b, c, d, e) {
@@ -138,50 +133,46 @@ function compareWord(guess, woord) {
     console.log(guessArray);
 
     //check woord lengte 
-    if (guessArray.length < woordLength && checkWoord(guess)) {
-        console.log('woord lengte klopt niet');
 
-    } else {
-        //check same spot
-        for (let i = 0; i < woordLength; i++) {
-            if (guess.charAt(i) == woord.charAt(i)) {
-                goodLetter[i] = 'good';
-            }
+    //check same spot
+    for (let i = 0; i < woordLength; i++) {
+        if (guess.charAt(i) == woord.charAt(i)) {
+            goodLetter[i] = 'good';
         }
-
-        // check different spot
-        for (let i = 0; i < woordLength; i++) {
-            for (let j = 0; j < woordLength; j++) {
-                if (guessArray[i] == hetWoordArray[j]) {
-                    difLetter[i] = 'dif';
-                    //haal letter uit array om dubbele te voorkomen
-                    hetWoordArray.splice(j, 1)
-                }
-            }
-        }
-
-        //combineer good en different
-        for (let i = 0; i < woordLength; i++) {
-            if (goodLetter[i] == 'good') {
-                difLetter[i] = goodLetter[i];
-            }
-        }
-
-        //Kijk of het woord goed is
-        if (difLetter[1] ==  'good') {
-            let goodCounter = 0;
-            for (let i = 0; i < woordLength; i++) {
-                if (difLetter[i] == 'good') {
-                    goodCounter++;
-                }
-            }
-            if (goodCounter >= woordLength) {
-                console.log('Winner winner Chicken Dinner');
-            }
-        }
-        console.log(difLetter);
-        lettersToBoard(guess, difLetter);
     }
+
+    // check different spot
+    for (let i = 0; i < woordLength; i++) {
+        for (let j = 0; j < woordLength; j++) {
+            if (guessArray[i] == hetWoordArray[j]) {
+                difLetter[i] = 'dif';
+                //haal letter uit array om dubbele te voorkomen
+                hetWoordArray.splice(j, 1)
+            }
+        }
+    }
+
+    //combineer good en different
+    for (let i = 0; i < woordLength; i++) {
+        if (goodLetter[i] == 'good') {
+            difLetter[i] = goodLetter[i];
+        }
+    }
+
+    //Kijk of het woord goed is
+    if (difLetter[1] == 'good') {
+        let goodCounter = 0;
+        for (let i = 0; i < woordLength; i++) {
+            if (difLetter[i] == 'good') {
+                goodCounter++;
+            }
+        }
+        if (goodCounter >= woordLength) {
+            console.log('Winner winner Chicken Dinner');
+        }
+    }
+    console.log(difLetter);
+    lettersToBoard(guess, difLetter);
 }
 
 
@@ -192,7 +183,7 @@ function textveldCheck() {
     document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken voor volgende ronde
 
     /*kijk of bestaat*/
-    compareWord(input, hetWoord);
+    checkWoord(input);
 }
 
 // function PlaySound() {
@@ -204,35 +195,27 @@ document.getElementsByClassName('testing')[0].addEventListener('click', textveld
 
 /*check of woord bestaat*/
 async function checkWoord(guess) {
+    guessArray = wordToLetter(guess);
+    if (guessArray.length < woordLength) {
+        console.log('woord lengte klopt niet');
+        return;
+    }
+
     let jsonUrl2 = jsonUrl + guess.charAt(0).toLowerCase() + '.json';
     const responce = await fetch(jsonUrl2);
     let data = await responce.json();
 
     for (i = 0; i < data.length; i++) {
         if (data[i].toLowerCase() == guess.toLowerCase()) {
-            console.log('dit woord bestaat');
-            return true;
+            compareWord(guess, hetWoord)
+            return;
         }
     }
     console.log('Dit woord bestaat NIET');
-    return false;
 }
-
-/*
-function testLengteWoord(guess) {
-    if (!guess.charAt(woordLength + 1 == '')) {
-        console.log('niet te lang');
-    }
-
-    if (guess.charAt(woordLength - 1 == '')) {
-        console.log('te kort');
-    }
-}
-*/
 
 function lettersToBoard(guess, klopt) {
     let woordString = wordToLetter(guess);
-    console.log('VUL DAT BORD');
 
     if (turn < 5) {
         for (let i = 0; i < woordLength; i++) {
@@ -242,7 +225,7 @@ function lettersToBoard(guess, klopt) {
             } else if (klopt[i] == 'dif') {
                 document.querySelectorAll('#letterSheet div')[woordLength * turn + i].textContent = woordString[i];
                 document.querySelectorAll('#letterSheet div')[woordLength * turn + i].classList.add('diffrent');
-            }  else {
+            } else {
                 document.querySelectorAll('#letterSheet div')[woordLength * turn + i].textContent = woordString[i];
             }
         }
