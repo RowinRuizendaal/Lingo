@@ -20,7 +20,7 @@ var abc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
 
 /*link naar woordenlijsten*/
 // var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
-var jsonUrl = 'http://127.0.0.1:5500/woorden/'; //offline server testing
+var jsonUrl = 'http://127.0.0.1:5501/woorden/'; //offline server testing
 
 const sound = new Audio();
 
