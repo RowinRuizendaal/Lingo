@@ -4,6 +4,7 @@ let availableNumb = [];
 var guess = '';
 var hetWoord = '';
 var goedeLetters = [];
+let goodArray = [];
 
 var turn = 0;
 
@@ -71,6 +72,7 @@ async function randomWoord() {
 
     hetWoord = data[ranNumb].toLowerCase();
 
+    goodArray[0] = hetWoord.charAt(0);
     document.querySelectorAll('#letterSheet div')[0].textContent = hetWoord.charAt(0);
     console.log(hetWoord);
     return hetWoord;
@@ -87,23 +89,23 @@ function equals5(a, b, c, d, e) {
 function checkWinner(sheet) {
     //horizontal en vertical
     for (let i = 0; sheet.length; i++) {
-        if (equals5(sheet[i][0], sheet[i][1], sheet[i][2], sheet[i][3], sheet[i][4], )) {
+        if (equals5(sheet[i][0], sheet[i][1], sheet[i][2], sheet[i][3], sheet[i][4])) {
             console.log('winner');
         }
     }
 
     for (let i = 0; i < sheet.length; i++) {
-        if (equals5(sheet[0][i], sheet[1][i], sheet[2][i], sheet[3][i], sheet[4][i], )) {
+        if (equals5(sheet[0][i], sheet[1][i], sheet[2][i], sheet[3][i], sheet[4][i])) {
             console.log('winner');
         }
     }
 
     //diagonal 
-    if (equals5(sheet[0][0], sheet[1][1], sheet[2][2], sheet[3][3], sheet[4][4], )) {
+    if (equals5(sheet[0][0], sheet[1][1], sheet[2][2], sheet[3][3], sheet[4][4])) {
         console.log('winner');
     }
 
-    if (equals5(sheet[0][4], sheet[1][3], sheet[2][2], sheet[3][1], sheet[4][0], )) {
+    if (equals5(sheet[0][4], sheet[1][3], sheet[2][2], sheet[3][1], sheet[4][0])) {
         console.log('winner');
     }
 }
@@ -131,13 +133,11 @@ function compareWord(guess, woord) {
     let hetWoordArray = wordToLetter(woord);
 
     console.log(guessArray);
-
-    //check woord lengte 
-
     //check same spot
     for (let i = 0; i < woordLength; i++) {
         if (guess.charAt(i) == woord.charAt(i)) {
             goodLetter[i] = 'good';
+            goodArray[i] = guess.charAt(i);
         }
     }
 
@@ -230,6 +230,13 @@ function lettersToBoard(guess, klopt) {
             }
         }
         turn++;
+
+        if (guess !== hetWoord) {
+            for (let j = 0; j < woordLength; j++) {
+                document.querySelectorAll('#letterSheet div')[woordLength * turn + j].textContent = goodArray[j];
+            }
+        }
+
     } else {
         console.log('game over bitch boi');
     }

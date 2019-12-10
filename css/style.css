@@ -28,8 +28,10 @@ header {
 }
 
 main div:first-child {
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 main div {
@@ -50,7 +52,7 @@ main div {
     grid-template-rows: repeat(5, 1fr);
     grid-gap: .4rem;
 
-    margin: 0 auto 2rem;
+    margin: 2rem;
 }
 
 #bingoSheet div {
@@ -80,7 +82,7 @@ main div {
     grid-template-rows: repeat(5, 1fr);
     grid-gap: .4rem;
 
-    margin: 0 auto 2rem;
+    margin: 2rem;
 }
 
 #letterSheet div {
