@@ -130,6 +130,7 @@ function compareWord(guess, woord) {
     // console.log(woord);
 
     let guessArray = wordToLetter(guess);
+    // let alleLetters = guessArray;
     let hetWoordArray = wordToLetter(woord);
 
     console.log(guessArray);
@@ -138,6 +139,9 @@ function compareWord(guess, woord) {
         if (guess.charAt(i) == woord.charAt(i)) {
             goodLetter[i] = 'good';
             goodArray[i] = guess.charAt(i);
+            
+            //voorkom dubbele triggers op goede letters
+            hetWoordArray[i] = '';
         }
     }
 
