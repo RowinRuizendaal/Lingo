@@ -173,6 +173,10 @@ function compareWord(guess, woord) {
         }
         if (goodCounter >= woordLength) {
             console.log('Winner winner Chicken Dinner');
+
+            //Select random bingo num, select, fill/class
+            // document.querySelectorAll()[]
+
         }
     }
     console.log(difLetter);
@@ -201,7 +205,9 @@ document.getElementsByClassName('testing')[0].addEventListener('click', textveld
 async function checkWoord(guess) {
     guessArray = wordToLetter(guess);
     if (guessArray.length < woordLength) {
+        document.querySelector('input[type=text]').classList.add('shake');
         console.log('woord lengte klopt niet');
+        
         return;
     }
 
@@ -215,8 +221,14 @@ async function checkWoord(guess) {
             return;
         }
     }
+    document.querySelector('input[type=text]').classList.add('shake');
     console.log('Dit woord bestaat NIET');
 }
+
+//Haal class van object voor volgende animatie
+document.querySelector('input[type=text]').addEventListener('animationend', () => {
+    document.querySelector('input[type=text]').classList.remove('shake');
+})
 
 function lettersToBoard(guess, klopt) {
     let woordString = wordToLetter(guess);
@@ -245,3 +257,5 @@ function lettersToBoard(guess, klopt) {
         console.log('game over bitch boi');
     }
 }
+
+

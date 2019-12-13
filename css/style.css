@@ -86,7 +86,6 @@ main div {
 }
 
 #letterSheet div {
-    /* width: 75px; */
     width: 100%;
     max-width: 55px;
     height: 100%;
@@ -108,8 +107,7 @@ main div {
 }
 
 #letterSheet .diffrent {
-    /* background-color: var(--lingoOranje); */
-    background-color: yellow;
+    background-color: var(--Geel);
 }
 
 #letterSheet .good {
@@ -124,12 +122,9 @@ main div {
 }
 
 form {
-    /* width: 50%;
-    min-width: 500px; */
-    max-width: 1024px;
+    max-width: 512px;
     margin: 0 auto;
 }
-
 
 input[type=text] {
     width: 100%;
@@ -149,4 +144,31 @@ input[type=text] {
             "bingoSheet letterSheet"
             "submit submit"
     } */
+}
+
+
+/*Animation*/
+.shake {
+    animation: shake .82s cubic-bezier(.36, .07, .19, .97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+
+    border-color: red;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
 }
