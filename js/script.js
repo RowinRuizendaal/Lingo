@@ -17,39 +17,9 @@ let bingoSheet = [
   ['', '', '', '', ''],
 ]
 
-const abc = [
-  'a',
-  'b',
-  'c',
-  'd',
-  'e',
-  'f',
-  'g',
-  'h',
-  'i',
-  'j',
-  'k',
-  'l',
-  'm',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  't',
-  'u',
-  'v',
-  'w',
-  'x',
-  'y',
-  'z',
-]
-
+const abc = 'abcdefghijklmnopqrstuvwxyz'
 const woordSubmitButton = document.querySelector('.testing')
 const guessTextField = document.querySelector('.gok')
-
-console.log(window.location.href)
 
 // link naar woordenlijsten
 const jsonUrl = `${window.location.href}woorden/`
@@ -131,7 +101,7 @@ woordSubmitButton.addEventListener('click', gameLogic)
 
 async function randomWoord() {
   const url = `${jsonUrl}${abc[Math.floor(Math.random() * abc.length)]}.json`
-  const data = await fetch(url)
+  let data = await fetch(url)
   data = await data.json()
 
   word = data[Math.floor(Math.random() * data.length)].toLowerCase()
@@ -261,7 +231,7 @@ async function checkWoord(guess) {
   return false
 }
 
-//Haal class van object voor volgende animatie
+// Remove class for next animation
 document
   .querySelector('input[type=text]')
   .addEventListener('animationend', () => {
