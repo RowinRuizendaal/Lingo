@@ -1,197 +1,238 @@
-var woordLength = 6;
-let availableNumb = [];
+const woordLength = 6
+let availableNumb = []
 
-var guess = '';
-var hetWoord = '';
-var goedeLetters = [];
-let goodArray = [];
+let guess = ''
+let hetWoord = ''
+let goedeLetters = []
+let goodArray = []
 
-var turn = 0;
+let turn = 0
 
-var board = [''];
-var bingoSheet = [
-    ['', '', '', '', '', ],
-    ['', '', '', '', '', ],
-    ['', '', '', '', '', ],
-    ['', '', '', '', '', ],
-    ['', '', '', '', '', ]
-];
+let board = ['']
+let bingoSheet = [
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+]
 
-var abc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', "w", 'x', 'y', 'z'];
+const abc = [
+  'a',
+  'b',
+  'c',
+  'd',
+  'e',
+  'f',
+  'g',
+  'h',
+  'i',
+  'j',
+  'k',
+  'l',
+  'm',
+  'n',
+  'o',
+  'p',
+  'q',
+  'r',
+  's',
+  't',
+  'u',
+  'v',
+  'w',
+  'x',
+  'y',
+  'z',
+]
 
-/*link naar woordenlijsten*/
-var jsonUrl = 'https://rowinruizendaal.github.io/Lingo/woorden/';
-//var jsonUrl = 'http://127.0.0.1:5501/woorden/'; //offline server testing
+const woordSubmitButton = document.querySelector('.testing')
+const guessTextField = document.querySelector('.gok')
 
-const sound = new Audio();
+console.log(window.location.href)
 
-function setup() {
-    for (let i = 0; i < 99; i++) {
-        availableNumb[i] = i + 1;
+// link naar woordenlijsten
+const jsonUrl = `${window.location.href}woorden/`
+
+const sound = new Audio()
+
+async function setup() {
+  // get random word
+  hetWoord = await randomWoord()
+  console.log(hetWoord)
+
+  for (let i = 0; i < 99; i++) {
+    availableNumb.push(i + 1)
+  }
+  console.log(availableNumb)
+
+  // Get 25 random numbers out of available array
+  const shuffled = availableNumb.sort(() => 0.5 - Math.random()).slice(0, 25)
+  console.log(shuffled)
+
+  // vul bingo sheet
+  for (let i = 0; i < bingoSheet.length; i++) {
+    for (let j = 0; j < bingoSheet.length; j++) {
+      let x = i * 5 + j
+      bingoSheet[i][j] = shuffled[x]
+      document.querySelectorAll('#bingoSheet div')[x].textContent = shuffled[x]
     }
-    console.log(availableNumb);
+  }
 
-    for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 5; j++) {
-            let index = Math.floor(Math.random() * availableNumb.length);
-            let num = availableNumb[index];
-            bingoSheet[j][i] = num;
-            availableNumb.splice(index, 1);
-        }
-    }
-    console.log(bingoSheet);
+  console.log(bingoSheet)
 
-    // vul bingo sheet
-    for (let i = 0; i < bingoSheet.length; i++) {
-        for (let j = 0; j < bingoSheet.length; j++) {
-            let x = i * 5 + j;
-            document.querySelectorAll('#bingoSheet div')[x].textContent = bingoSheet[i][j];
-        }
-    }
+  /*geluid knop*/
+  // document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
 
-    /*geluid knop*/
-    // document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
+  /*prevent refresh als submit*/
+  document
+    .getElementsByClassName('testing')[0]
+    .addEventListener('click', function (event) {
+      event.preventDefault()
+    })
 
-    /*prevent refresh als submit*/
-    document.getElementsByClassName("testing")[0].addEventListener("click", function (event) {
-        event.preventDefault()
-    });
-
-    // document.getElementsByClassName("bier")[0].addEventListener("click", function (event) {
-    //     event.preventDefault()
-    // });
+  // document.getElementsByClassName("bier")[0].addEventListener("click", function (event) {
+  //     event.preventDefault()
+  // });
 }
-setup();
+setup()
+
+async function gameLogic() {
+  console.log('start gamelogic')
+  const input = guessTextField.value
+  const woord = hetWoord
+
+  document.querySelector('.Woord').textContent = `Gegokte woord: ${input}`
+  guessTextField.value = '' // Clear input for next round
+
+  // check lenght
+  if (input.length != woordLength) {
+    console.log('Word to short')
+    return
+  }
+
+  // Kijk of woord in woordenlijst
+  const exists = await checkWoord(input)
+
+  if (exists) {
+    console.log('aaa')
+
+    const goodArr = compareWord(input, woord)
+    lettersToBoard(input, goodArr)
+
+    // get bingo number
+  } else {
+    console.log('Dit woord bestaat NIET')
+    document.querySelector('input[type=text]').classList.add('shake')
+  }
+}
+
+woordSubmitButton.addEventListener('click', gameLogic)
 
 async function randomWoord() {
-    let ranNumb = Math.floor(Math.random() * abc.length);
-    let url = jsonUrl + abc[ranNumb] + '.json';
-    let data = await fetch(url);
-    data = await data.json();
-    ranNumb = Math.floor(Math.random() * data.length);
+  const url = `${jsonUrl}${abc[Math.floor(Math.random() * abc.length)]}.json`
+  const data = await fetch(url)
+  data = await data.json()
 
-    hetWoord = data[ranNumb].toLowerCase();
+  word = data[Math.floor(Math.random() * data.length)].toLowerCase()
 
-    goodArray[0] = hetWoord.charAt(0);
-    document.querySelectorAll('#letterSheet div')[0].textContent = hetWoord.charAt(0);
-    console.log(hetWoord);
-    return hetWoord;
+  goodArray[0] = word[0]
+  document.querySelectorAll('#letterSheet div')[0].textContent = word[0]
+  return word
 }
-
-hetWoord = randomWoord();
-console.log(hetWoord);
 
 /*check bingo board winner*/
 function equals5(a, b, c, d, e) {
-    return (a == b && b == c && c == d && d == e && a != '');
+  return a == b && b == c && c == d && d == e && a != ''
 }
 
 function checkWinner(sheet) {
-    //horizontal en vertical
-    for (let i = 0; sheet.length; i++) {
-        if (equals5(sheet[i][0], sheet[i][1], sheet[i][2], sheet[i][3], sheet[i][4])) {
-            console.log('winner');
-        }
+  //horizontal en vertical
+  for (let i = 0; sheet.length; i++) {
+    if (
+      equals5(sheet[i][0], sheet[i][1], sheet[i][2], sheet[i][3], sheet[i][4])
+    ) {
+      console.log('winner')
     }
+  }
 
-    for (let i = 0; i < sheet.length; i++) {
-        if (equals5(sheet[0][i], sheet[1][i], sheet[2][i], sheet[3][i], sheet[4][i])) {
-            console.log('winner');
-        }
+  for (let i = 0; i < sheet.length; i++) {
+    if (
+      equals5(sheet[0][i], sheet[1][i], sheet[2][i], sheet[3][i], sheet[4][i])
+    ) {
+      console.log('winner')
     }
+  }
 
-    //diagonal 
-    if (equals5(sheet[0][0], sheet[1][1], sheet[2][2], sheet[3][3], sheet[4][4])) {
-        console.log('winner');
-    }
+  //diagonal
+  if (
+    equals5(sheet[0][0], sheet[1][1], sheet[2][2], sheet[3][3], sheet[4][4])
+  ) {
+    console.log('winner')
+  }
 
-    if (equals5(sheet[0][4], sheet[1][3], sheet[2][2], sheet[3][1], sheet[4][0])) {
-        console.log('winner');
-    }
+  if (
+    equals5(sheet[0][4], sheet[1][3], sheet[2][2], sheet[3][1], sheet[4][0])
+  ) {
+    console.log('winner')
+  }
 }
-
-
-function wordToLetter(s) {
-    s = s.toLowerCase();
-    let letters = [];
-    for (let i = 0; i < s.length; i++) {
-        letters.push(s.charAt(i));
-    }
-    return letters;
-}
-
 
 function compareWord(guess, woord) {
-    // good different/dif bad
-    let goodLetter = [];
-    let difLetter = [];
+  guess = guess.toLowerCase()
+  woord = woord.toLowerCase()
 
-    console.log(guess);
-    // console.log(woord);
+  // good different/dif bad
+  let goodLetter = []
+  let difLetter = []
 
-    let guessArray = wordToLetter(guess);
-    // let alleLetters = guessArray;
-    let hetWoordArray = wordToLetter(woord);
+  if (guess == woord) {
+    // We have a winner
+    console.log('Winner winner Chicken Dinner')
+    difLetter = ['good', 'good', 'good', 'good', 'good', 'good']
+    return difLetter
+  }
 
-    console.log(guessArray);
-    //check same spot
+  //check same spot
+  for (let i = 0; i < woordLength; i++) {
+    if (guess.charAt(i) == woord.charAt(i)) {
+      goodLetter[i] = 'good'
+      goodArray[i] = guess.charAt(i)
+
+      //voorkom dubbele triggers op goede letters
+      woord[i] = ''
+    }
+  }
+
+  // check different spot
+  for (let i = 0; i < woordLength; i++) {
+    for (let j = 0; j < woordLength; j++) {
+      if (guess[i] == woord[j]) {
+        difLetter[i] = 'dif'
+        //haal letter uit array om dubbele te voorkomen
+        woord[j] = ''
+      }
+    }
+  }
+
+  //combineer good en different
+  for (let i = 0; i < woordLength; i++) {
+    if (goodLetter[i] == 'good') {
+      difLetter[i] = goodLetter[i]
+    }
+  }
+
+  //Kijk of het woord goed is
+  if (difLetter[1] == 'good') {
+    let goodCounter = 0
     for (let i = 0; i < woordLength; i++) {
-        if (guess.charAt(i) == woord.charAt(i)) {
-            goodLetter[i] = 'good';
-            goodArray[i] = guess.charAt(i);
-            
-            //voorkom dubbele triggers op goede letters
-            hetWoordArray[i] = '';
-        }
+      if (difLetter[i] == 'good') {
+        goodCounter++
+      }
     }
-
-    // check different spot
-    for (let i = 0; i < woordLength; i++) {
-        for (let j = 0; j < woordLength; j++) {
-            if (guessArray[i] == hetWoordArray[j]) {
-                difLetter[i] = 'dif';
-                //haal letter uit array om dubbele te voorkomen
-                hetWoordArray.splice(j, 1)
-            }
-        }
-    }
-
-    //combineer good en different
-    for (let i = 0; i < woordLength; i++) {
-        if (goodLetter[i] == 'good') {
-            difLetter[i] = goodLetter[i];
-        }
-    }
-
-    //Kijk of het woord goed is
-    if (difLetter[1] == 'good') {
-        let goodCounter = 0;
-        for (let i = 0; i < woordLength; i++) {
-            if (difLetter[i] == 'good') {
-                goodCounter++;
-            }
-        }
-        if (goodCounter >= woordLength) {
-            console.log('Winner winner Chicken Dinner');
-
-            //Select random bingo num, select, fill/class
-            // document.querySelectorAll()[]
-
-        }
-    }
-    console.log(difLetter);
-    lettersToBoard(guess, difLetter);
-}
-
-
-function textveldCheck() {
-    let input = document.getElementsByClassName('gok')[0].value; //input van form
-
-    document.getElementsByClassName('Woord')[0].textContent = 'Gegokte woord: ' + input;
-    document.getElementsByClassName('gok')[0].value = ""; //input van form weer leegmaken voor volgende ronde
-
-    /*kijk of bestaat*/
-    checkWoord(input);
+  }
+  console.log(difLetter)
+  return difLetter
 }
 
 // function PlaySound() {
@@ -199,63 +240,67 @@ function textveldCheck() {
 //     sound.play();
 // }
 
-document.getElementsByClassName('testing')[0].addEventListener('click', textveldCheck);
-
 /*check of woord bestaat*/
 async function checkWoord(guess) {
-    guessArray = wordToLetter(guess);
-    if (guessArray.length < woordLength) {
-        document.querySelector('input[type=text]').classList.add('shake');
-        console.log('woord lengte klopt niet');
-        
-        return;
-    }
+  guess = guess.toLowerCase()
 
-    let jsonUrl2 = jsonUrl + guess.charAt(0).toLowerCase() + '.json';
-    const responce = await fetch(jsonUrl2);
-    let data = await responce.json();
+  let jsonUrl2 = `${jsonUrl}${guess[0]}.json`
+  const responce = await fetch(jsonUrl2)
+  let data = await responce.json()
 
-    for (i = 0; i < data.length; i++) {
-        if (data[i].toLowerCase() == guess.toLowerCase()) {
-            compareWord(guess, hetWoord)
-            return;
-        }
+  for (let i of data) {
+    if (i.toLowerCase() == guess.toLowerCase()) {
+      compareWord(guess, hetWoord)
+      console.log('yeeehaww')
+      return true
     }
-    document.querySelector('input[type=text]').classList.add('shake');
-    console.log('Dit woord bestaat NIET');
+  }
+  document.querySelector('input[type=text]').classList.add('shake')
+  console.log('Dit woord bestaat NIET')
+
+  return false
 }
 
 //Haal class van object voor volgende animatie
-document.querySelector('input[type=text]').addEventListener('animationend', () => {
-    document.querySelector('input[type=text]').classList.remove('shake');
-})
+document
+  .querySelector('input[type=text]')
+  .addEventListener('animationend', () => {
+    document.querySelector('input[type=text]').classList.remove('shake')
+  })
 
 function lettersToBoard(guess, klopt) {
-    let woordString = wordToLetter(guess);
-
-    if (turn < 5) {
-        for (let i = 0; i < woordLength; i++) {
-            if (klopt[i] == 'good') {
-                document.querySelectorAll('#letterSheet div')[woordLength * turn + i].textContent = woordString[i];
-                document.querySelectorAll('#letterSheet div')[woordLength * turn + i].classList.add('good');
-            } else if (klopt[i] == 'dif') {
-                document.querySelectorAll('#letterSheet div')[woordLength * turn + i].textContent = woordString[i];
-                document.querySelectorAll('#letterSheet div')[woordLength * turn + i].classList.add('diffrent');
-            } else {
-                document.querySelectorAll('#letterSheet div')[woordLength * turn + i].textContent = woordString[i];
-            }
-        }
-        turn++;
-
-        if (guess !== hetWoord) {
-            for (let j = 0; j < woordLength; j++) {
-                document.querySelectorAll('#letterSheet div')[woordLength * turn + j].textContent = goodArray[j];
-            }
-        }
-
-    } else {
-        console.log('game over bitch boi');
+  if (turn < 5) {
+    for (let i = 0; i < woordLength; i++) {
+      if (klopt[i] == 'good') {
+        document.querySelectorAll('#letterSheet div')[
+          woordLength * turn + i
+        ].textContent = guess[i]
+        document
+          .querySelectorAll('#letterSheet div')
+          [woordLength * turn + i].classList.add('good')
+      } else if (klopt[i] == 'dif') {
+        document.querySelectorAll('#letterSheet div')[
+          woordLength * turn + i
+        ].textContent = guess[i]
+        document
+          .querySelectorAll('#letterSheet div')
+          [woordLength * turn + i].classList.add('diffrent')
+      } else {
+        document.querySelectorAll('#letterSheet div')[
+          woordLength * turn + i
+        ].textContent = guess[i]
+      }
     }
+    turn++
+
+    if (guess !== hetWoord) {
+      for (let j = 0; j < woordLength; j++) {
+        document.querySelectorAll('#letterSheet div')[
+          woordLength * turn + j
+        ].textContent = goodArray[j]
+      }
+    }
+  } else {
+    console.log('game over bitch boi')
+  }
 }
-
-
