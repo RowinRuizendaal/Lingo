@@ -20,6 +20,8 @@ let bingoSheet = [
 const abc = 'abcdefghijklmnopqrstuvwxyz'
 const woordSubmitButton = document.querySelector('.testing')
 const guessTextField = document.querySelector('.gok')
+const letterBoardArr = document.querySelectorAll('#letterSheet div')
+const bingoSheetElement = document.querySelectorAll('#bingoSheet div')
 
 // link naar woordenlijsten
 const jsonUrl = `${window.location.href}woorden/`
@@ -34,7 +36,6 @@ async function setup() {
   for (let i = 0; i < 99; i++) {
     availableNumb.push(i + 1)
   }
-  console.log(availableNumb)
 
   // Get 25 random numbers out of available array
   const shuffled = availableNumb.sort(() => 0.5 - Math.random()).slice(0, 25)
@@ -67,6 +68,21 @@ async function setup() {
 }
 setup()
 
+async function resetGame() {
+  turn = 0
+
+  // clear text display
+  for (let i of letterBoardArr) {
+    i.textContent = ''
+    i.classList.remove('diffrent')
+    i.classList.remove('good')
+  }
+
+  // get new word
+  hetWoord = await randomWoord()
+  console.log(hetWoord)
+}
+
 async function gameLogic() {
   console.log('start gamelogic')
   const input = guessTextField.value
@@ -85,10 +101,23 @@ async function gameLogic() {
   const exists = await checkWoord(input)
 
   if (exists) {
-    console.log('aaa')
-
     const goodArr = compareWord(input, woord)
     lettersToBoard(input, goodArr)
+
+    // get ball if goodArr all good
+    let unique = goodArr.filter((v, i, a) => a.indexOf(v) === i)
+    console.log(unique)
+    // let unique = [...new Set(goodArr)];
+    if (
+      unique.length == 1 &&
+      unique[0] == 'good' &&
+      !goodArr.includes(undefined)
+    ) {
+      // get ball
+      pickBall()
+
+      resetGame()
+    }
 
     // get bingo number
   } else {
@@ -221,7 +250,6 @@ async function checkWoord(guess) {
   for (let i of data) {
     if (i.toLowerCase() == guess.toLowerCase()) {
       compareWord(guess, hetWoord)
-      console.log('yeeehaww')
       return true
     }
   }
@@ -241,36 +269,33 @@ document
 function lettersToBoard(guess, klopt) {
   if (turn < 5) {
     for (let i = 0; i < woordLength; i++) {
+      const letterSpot = woordLength * turn + i
       if (klopt[i] == 'good') {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + i
-        ].textContent = guess[i]
-        document
-          .querySelectorAll('#letterSheet div')
-          [woordLength * turn + i].classList.add('good')
+        letterBoardArr[letterSpot].textContent = guess[i]
+        letterBoardArr[letterSpot].classList.add('good')
       } else if (klopt[i] == 'dif') {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + i
-        ].textContent = guess[i]
+        letterBoardArr[letterSpot].textContent = guess[i]
         document
-          .querySelectorAll('#letterSheet div')
-          [woordLength * turn + i].classList.add('diffrent')
+        letterBoardArr[letterSpot].classList.add('diffrent')
       } else {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + i
-        ].textContent = guess[i]
+        letterBoardArr[letterSpot].textContent = guess[i]
       }
     }
     turn++
 
     if (guess !== hetWoord) {
       for (let j = 0; j < woordLength; j++) {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + j
-        ].textContent = goodArray[j]
+        letterBoardArr[woordLength * turn + j].textContent = goodArray[j]
       }
     }
   } else {
     console.log('game over bitch boi')
   }
+}
+
+function pickBall() {
+  let x = Math.floor(Math.random() * bingoSheet.length)
+  let y = Math.floor(Math.random() * bingoSheet[x].length)
+
+  bingoSheetElement[5 * x + y].classList.add('good')
 }
