@@ -1,5 +1,9 @@
 const woordLength = 6
+
+// 1D bingo sheet array
 let availableNumb = []
+// all items in the ballenbak
+let ballenbak = []
 
 let guess = ''
 let hetWoord = ''
@@ -7,6 +11,7 @@ let goedeLetters = []
 let goodArray = []
 
 let turn = 0
+let score = 0
 
 let board = ['']
 let bingoSheet = [
@@ -20,6 +25,8 @@ let bingoSheet = [
 const abc = 'abcdefghijklmnopqrstuvwxyz'
 const woordSubmitButton = document.querySelector('.testing')
 const guessTextField = document.querySelector('.gok')
+const letterBoardArr = document.querySelectorAll('#letterSheet div')
+const bingoSheetElement = document.querySelectorAll('#bingoSheet div')
 
 // link naar woordenlijsten
 const jsonUrl = `${window.location.href}woorden/`
@@ -31,25 +38,16 @@ async function setup() {
   hetWoord = await randomWoord()
   console.log(hetWoord)
 
-  for (let i = 0; i < 99; i++) {
-    availableNumb.push(i + 1)
-  }
-  console.log(availableNumb)
-
-  // Get 25 random numbers out of available array
-  const shuffled = availableNumb.sort(() => 0.5 - Math.random()).slice(0, 25)
-  console.log(shuffled)
+  fillBallenbak()
 
   // vul bingo sheet
   for (let i = 0; i < bingoSheet.length; i++) {
     for (let j = 0; j < bingoSheet.length; j++) {
       let x = i * 5 + j
-      bingoSheet[i][j] = shuffled[x]
-      document.querySelectorAll('#bingoSheet div')[x].textContent = shuffled[x]
+      bingoSheet[i][j] = availableNumb[x]
+      bingoSheetElement[x].textContent = availableNumb[x]
     }
   }
-
-  console.log(bingoSheet)
 
   /*geluid knop*/
   // document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
@@ -66,6 +64,45 @@ async function setup() {
   // });
 }
 setup()
+
+async function resetGame() {
+  turn = 0
+
+  // clear text display
+  for (let i of letterBoardArr) {
+    i.textContent = ''
+    i.classList.remove('diffrent')
+    i.classList.remove('good')
+  }
+
+  // get new word
+  hetWoord = await randomWoord()
+  console.log(hetWoord)
+}
+
+function fillBallenbak() {
+  // generate random 60 balls + special
+  for (let i = 0; i < 100; i++) {
+    availableNumb.push(i)
+  }
+
+  // Get 60 random numbers out of available array
+  availableNumb = availableNumb.sort(() => 0.5 - Math.random()).slice(0, 60)
+  // use this so it points to different memory adress
+  ballenbak = [...availableNumb]
+
+  // add special balls
+  ballenbak.push('groen')
+  ballenbak.push('groen')
+  ballenbak.push('groen')
+  // ballsArr.push('goud')
+
+  // shuffle ballenbak 1 more time
+  ballenbak = ballenbak.sort(() => 0.5 - Math.random())
+
+  console.log(ballenbak)
+  console.log(availableNumb)
+}
 
 async function gameLogic() {
   console.log('start gamelogic')
@@ -85,10 +122,24 @@ async function gameLogic() {
   const exists = await checkWoord(input)
 
   if (exists) {
-    console.log('aaa')
-
     const goodArr = compareWord(input, woord)
     lettersToBoard(input, goodArr)
+
+    // get ball if goodArr all good
+    const unique = goodArr.filter((v, i, a) => a.indexOf(v) === i)
+    // let unique = [...new Set(goodArr)];
+
+    if (
+      unique.length == 1 &&
+      unique[0] == 'good' &&
+      !goodArr.includes(undefined)
+    ) {
+      // get ball
+      pickBall()
+      score++
+
+      resetGame()
+    }
 
     // get bingo number
   } else {
@@ -117,35 +168,38 @@ function equals5(a, b, c, d, e) {
 }
 
 function checkWinner(sheet) {
-  //horizontal en vertical
-  for (let i = 0; sheet.length; i++) {
+  let winner = false
+
+  for (let i = 0; i < sheet.length; i++) {
+    // horizontal
     if (
       equals5(sheet[i][0], sheet[i][1], sheet[i][2], sheet[i][3], sheet[i][4])
     ) {
-      console.log('winner')
+      winner = true
     }
-  }
 
-  for (let i = 0; i < sheet.length; i++) {
+    // vertical
     if (
       equals5(sheet[0][i], sheet[1][i], sheet[2][i], sheet[3][i], sheet[4][i])
     ) {
-      console.log('winner')
+      winner = true
     }
   }
 
-  //diagonal
+  //diagonals
   if (
     equals5(sheet[0][0], sheet[1][1], sheet[2][2], sheet[3][3], sheet[4][4])
   ) {
-    console.log('winner')
+    winner = true
   }
 
   if (
     equals5(sheet[0][4], sheet[1][3], sheet[2][2], sheet[3][1], sheet[4][0])
   ) {
-    console.log('winner')
+    winner = true
   }
+
+  return winner
 }
 
 function compareWord(guess, woord) {
@@ -220,8 +274,6 @@ async function checkWoord(guess) {
 
   for (let i of data) {
     if (i.toLowerCase() == guess.toLowerCase()) {
-      compareWord(guess, hetWoord)
-      console.log('yeeehaww')
       return true
     }
   }
@@ -241,36 +293,50 @@ document
 function lettersToBoard(guess, klopt) {
   if (turn < 5) {
     for (let i = 0; i < woordLength; i++) {
+      const letterSpot = woordLength * turn + i
       if (klopt[i] == 'good') {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + i
-        ].textContent = guess[i]
-        document
-          .querySelectorAll('#letterSheet div')
-          [woordLength * turn + i].classList.add('good')
+        letterBoardArr[letterSpot].textContent = guess[i]
+        letterBoardArr[letterSpot].classList.add('good')
       } else if (klopt[i] == 'dif') {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + i
-        ].textContent = guess[i]
+        letterBoardArr[letterSpot].textContent = guess[i]
         document
-          .querySelectorAll('#letterSheet div')
-          [woordLength * turn + i].classList.add('diffrent')
+        letterBoardArr[letterSpot].classList.add('diffrent')
       } else {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + i
-        ].textContent = guess[i]
+        letterBoardArr[letterSpot].textContent = guess[i]
       }
     }
     turn++
 
     if (guess !== hetWoord) {
       for (let j = 0; j < woordLength; j++) {
-        document.querySelectorAll('#letterSheet div')[
-          woordLength * turn + j
-        ].textContent = goodArray[j]
+        letterBoardArr[woordLength * turn + j].textContent = goodArray[j]
       }
     }
   } else {
     console.log('game over bitch boi')
   }
+}
+
+function pickBall() {
+  const randomNumb = Math.floor(Math.random() * ballenbak.length)
+
+  const pull = ballenbak[randomNumb]
+  console.log(pull)
+
+  ballenbak.splice(randomNumb, 1)
+
+  if (typeof pull == 'number') {
+    const valueIndex = availableNumb[pull]
+    if (valueIndex > -1) {
+      availableNumb.splice(valueIndex, 1)
+    }
+
+    // update board
+    for (let i of bingoSheetElement) {
+      if (i.innerHTML == pull) {
+        i.classList.add('good')
+      }
+    }
+  }
+  console.log(ballenbak)
 }

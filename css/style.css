@@ -69,6 +69,9 @@ main div {
     background: radial-gradient(blue, #060041);
 }
 
+#bingoSheet div.good {
+    background: radial-gradient(var(--Geel), #363300);
+}
 
 #letterSheet {
     /* grid-area: letterSheet; */
@@ -89,7 +92,7 @@ main div {
     width: 100%;
     max-width: 55px;
     height: 100%;
-    
+
     display: flex;
     box-shadow: inset 0px 1px 3px 3px #000000;
     justify-content: center;
@@ -157,18 +160,25 @@ input[type=text] {
 }
 
 @keyframes shake {
-    10%, 90% {
+
+    10%,
+    90% {
         transform: translate3d(-1px, 0, 0);
     }
-    20%, 80% {
+
+    20%,
+    80% {
         transform: translate3d(2px, 0, 0);
     }
 
-    30%, 50%, 70% {
+    30%,
+    50%,
+    70% {
         transform: translate3d(-4px, 0, 0);
     }
 
-    40%, 60% {
+    40%,
+    60% {
         transform: translate3d(4px, 0, 0);
     }
 }
