@@ -27,7 +27,7 @@ const letterBoardArr = document.querySelectorAll('#letterSheet div')
 const bingoSheetElement = document.querySelectorAll('#bingoSheet div')
 
 // link naar woordenlijsten
-const jsonUrl = `${window.location.origin}/woorden/`
+const jsonUrl = `${window.location.href.split('?')[0]}woorden/`
 
 const sound = new Audio()
 
@@ -76,7 +76,7 @@ function generateBallen() {
   }
 
   // shuffle numbers in ballenbak and take 25
-  ballenbak = ballenbak.sort(() => .5 - Math.random()).slice(0, 25)
+  ballenbak = ballenbak.sort(() => 0.5 - Math.random()).slice(0, 25)
 
   // fill the bingo sheet with 25 random numbers
   for (let i = 0; i < bingoSheet.length; i++) {
@@ -312,7 +312,7 @@ function lettersToBoard(guess, klopt) {
 function pickBall() {
   // get random number to pull
   const randomNumb = Math.floor(Math.random() * ballenbak.length)
-  
+
   const pull = ballenbak[randomNumb]
   console.log(pull)
 
@@ -330,5 +330,9 @@ function pickBall() {
   console.log(ballenbak)
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-urlParams.get('bg') ? document.querySelector('body').style.background = `url(${urlParams.get('bg')})` : console.log('no special bg')
+const urlParams = new URLSearchParams(window.location.search)
+urlParams.get('bg')
+  ? (document.querySelector('body').style.background = `url(${urlParams.get(
+      'bg'
+    )})`)
+  : console.log('no special bg')
