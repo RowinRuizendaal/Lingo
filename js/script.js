@@ -1,7 +1,5 @@
 const woordLength = 6
 
-// 1D bingo sheet array
-let availableNumb = []
 // all items in the ballenbak
 let ballenbak = []
 
@@ -29,7 +27,7 @@ const letterBoardArr = document.querySelectorAll('#letterSheet div')
 const bingoSheetElement = document.querySelectorAll('#bingoSheet div')
 
 // link naar woordenlijsten
-const jsonUrl = `${window.location.href}woorden/`
+const jsonUrl = `${window.location.origin}/woorden/`
 
 const sound = new Audio()
 
@@ -38,16 +36,7 @@ async function setup() {
   hetWoord = await randomWoord()
   console.log(hetWoord)
 
-  fillBallenbak()
-
-  // vul bingo sheet
-  for (let i = 0; i < bingoSheet.length; i++) {
-    for (let j = 0; j < bingoSheet.length; j++) {
-      let x = i * 5 + j
-      bingoSheet[i][j] = availableNumb[x]
-      bingoSheetElement[x].textContent = availableNumb[x]
-    }
-  }
+  generateBallen()
 
   /*geluid knop*/
   // document.getElementsByClassName('bier')[0].addEventListener('click', PlaySound);
@@ -80,28 +69,31 @@ async function resetGame() {
   console.log(hetWoord)
 }
 
-function fillBallenbak() {
+function generateBallen() {
   // generate random 60 balls + special
   for (let i = 0; i < 100; i++) {
-    availableNumb.push(i)
+    ballenbak.push(i)
   }
 
-  // Get 60 random numbers out of available array
-  availableNumb = availableNumb.sort(() => 0.5 - Math.random()).slice(0, 60)
-  // use this so it points to different memory adress
-  ballenbak = [...availableNumb]
+  // shuffle numbers in ballenbak and take 25
+  ballenbak = ballenbak.sort(() => .5 - Math.random()).slice(0, 25)
+
+  // fill the bingo sheet with 25 random numbers
+  for (let i = 0; i < bingoSheet.length; i++) {
+    for (let j = 0; j < bingoSheet.length; j++) {
+      let x = i * 5 + j
+      bingoSheet[i][j] = ballenbak[x]
+      bingoSheetElement[x].textContent = ballenbak[x]
+    }
+  }
 
   // add special balls
-  ballenbak.push('groen')
-  ballenbak.push('groen')
-  ballenbak.push('groen')
+  ballenbak.push('groen', 'groen', 'groen')
   // ballsArr.push('goud')
 
   // shuffle ballenbak 1 more time
   ballenbak = ballenbak.sort(() => 0.5 - Math.random())
-
   console.log(ballenbak)
-  console.log(availableNumb)
 }
 
 async function gameLogic() {
@@ -318,19 +310,16 @@ function lettersToBoard(guess, klopt) {
 }
 
 function pickBall() {
+  // get random number to pull
   const randomNumb = Math.floor(Math.random() * ballenbak.length)
-
+  
   const pull = ballenbak[randomNumb]
   console.log(pull)
 
+  // remove pull from ballenbak
   ballenbak.splice(randomNumb, 1)
 
   if (typeof pull == 'number') {
-    const valueIndex = availableNumb[pull]
-    if (valueIndex > -1) {
-      availableNumb.splice(valueIndex, 1)
-    }
-
     // update board
     for (let i of bingoSheetElement) {
       if (i.innerHTML == pull) {
@@ -340,3 +329,6 @@ function pickBall() {
   }
   console.log(ballenbak)
 }
+
+const urlParams = new URLSearchParams(window.location.search);
+urlParams.get('bg') ? document.querySelector('body').style.background = `url(${urlParams.get('bg')})` : console.log('no special bg')
