@@ -20,6 +20,14 @@ let bingoSheet = [
   ['', '', '', '', ''],
 ]
 
+let bingoCheck = [
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+  ['', '', '', '', ''],
+]
+
 const abc = 'abcdefghijklmnopqrstuvwxyz'
 const woordSubmitButton = document.querySelector('.testing')
 const guessTextField = document.querySelector('.gok')
@@ -130,6 +138,10 @@ async function gameLogic() {
       pickBall()
       score++
 
+      // check if bingo
+      let winner = checkWinner(bingoCheck)
+      console.log(`do we have a winner? ${winner}`)
+
       resetGame()
     }
 
@@ -154,7 +166,7 @@ async function randomWoord() {
   return word
 }
 
-/*check bingo board winner*/
+// check bingo board winner
 function equals5(a, b, c, d, e) {
   return a == b && b == c && c == d && d == e && a != ''
 }
@@ -256,7 +268,7 @@ function compareWord(guess, woord) {
 //     sound.play();
 // }
 
-/*check of woord bestaat*/
+// check of woord bestaat
 async function checkWoord(guess) {
   guess = guess.toLowerCase()
 
@@ -321,9 +333,16 @@ function pickBall() {
 
   if (typeof pull == 'number') {
     // update board
-    for (let i of bingoSheetElement) {
-      if (i.innerHTML == pull) {
-        i.classList.add('good')
+    for (let i = 0; i < bingoSheetElement.length; i++) {
+      if (bingoSheetElement[i].innerHTML == pull) {
+        bingoSheetElement[i].classList.add('good')
+
+        // update bingoCheck
+        let x = Math.floor(i / 5)
+        let y = i % 5
+        bingoCheck[x][y] = '1'
+
+        return
       }
     }
   }
